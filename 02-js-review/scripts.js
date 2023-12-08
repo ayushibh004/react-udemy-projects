@@ -1,3 +1,7 @@
+/**
+ * JS REVIEW
+ *
+ */
 const data = [
   {
     id: 1,
@@ -66,7 +70,7 @@ const data = [
     publicationDate: "1965-01-01",
     author: "Frank Herbert",
     genres: ["science fiction", "novel", "adventure"],
-    hasMovieAdaptation: true,
+    hasMovieAdaptation: false,
     pages: 658,
     translations: {
       spanish: "",
@@ -142,3 +146,138 @@ function getBooks() {
 function getBook(id) {
   return data.find((d) => d.id === id);
 }
+
+//arrow function, function expression, ideally use it in one line of code
+const getYear = (str) => {
+  return str.split("-")[0];
+};
+
+//Destructuring
+
+const book = getBook(3);
+book;
+
+const { title, author, pages, publicationDate, genres, hasMovieAdaptation } =
+  book;
+const [primaryGenre, secondaryGenre, ...other] = genres;
+console.log(primaryGenre, secondaryGenre, other);
+
+const newGenres = [...genres, "epic fantasy"];
+newGenres;
+
+//spread and rest operator both have the same syntax
+const updatedBook = {
+  ...book,
+  //adding a new property
+  moviePublicationDate: "2001-12-19",
+  pages: 1210, //needs to be after to update the pages property, overriding an existing property
+};
+updatedBook;
+
+//Template literals
+const summary = `${title}, a ${pages}-page long book, was written by ${author} and published in ${getYear(
+  publicationDate
+)}`;
+summary;
+
+console.log(getYear(publicationDate));
+
+//the ?? operator is used instead of just using || if you want to check if a value is anything but null or undefined
+
+//optional chaining
+
+function getTotalReviewCount(book) {
+  const goodreads = book.reviews.goodreads.reviewsCount;
+  //if librarything is undefined, won't try to access reviewsCount property, this is optional chaining
+  //if there is no count, return 0
+  const librarything = book.reviews.librarything?.reviewsCount ?? 0;
+  return goodreads + librarything;
+}
+// console.log(getTotalReviewCount(book));
+
+//Array Methods
+const books = getBooks();
+books;
+
+//callback function called for each of the elements in the array - MAP, creates a new array
+const x = [1, 2, 3, 4].map((el) => el * 2);
+console.log(x);
+
+const titles = books.map((book) => book.title);
+console.log(titles);
+
+//returning array with essential book data only
+const essentialData = books.map((book) => ({
+  title: book.title,
+  author: book.author,
+  reviewsCount: getTotalReviewCount(book),
+}));
+essentialData;
+
+//Filter method -> this callback will also be called for each element in the array
+const longBooksWithMovie = books
+  .filter((book) => book.pages > 500)
+  .filter((book) => book.hasMovieAdaptation);
+longBooksWithMovie;
+
+const adventureBooks = books
+  .filter((books) => books.genres.includes("adventure"))
+  .map((book) => book.title);
+adventureBooks;
+
+//reduce -> reduce the entire array to one value
+//acc => current value of the accumulator
+//0, starting value
+const pagesAllBooks = books.reduce((sum, book) => sum + book.pages, 0);
+pagesAllBooks;
+
+//sort -> changes the original array, but don't want to mutate data in react
+const arr = [3, 4, 6, 9, 1, 7];
+const sorted = arr.slice().sort((a, b) => b - a); //makes a copy
+sorted;
+arr;
+
+const sortedByPages = books.slice().sort((a, b) => a.pages - b.pages);
+sortedByPages;
+
+//working with immutable arrays, add, update, delete without changing array
+
+//1) add a book object to array
+const newBook = {
+  id: 6,
+  title: "Harry Potter and the Chamber of Secrets",
+  author: "J.K. Rowling",
+};
+
+const booksAfterAdd = [...books, newBook];
+booksAfterAdd;
+
+//2) delete book object from array
+const booksAfterDelete = booksAfterAdd.filter((book) => book.id !== 3);
+booksAfterDelete;
+
+//3) update book object in the array
+const booksAfterUpdate = booksAfterDelete.map((book) =>
+  book.id === 1 ? { ...book, pages: 1210000 } : book
+);
+booksAfterUpdate;
+
+//Promises
+
+//returns a promise(pending, rejected, fulfilled, 3 states of promise)
+//if it's fulfilled, how do handle? => using then
+//res.json returns a promise, that's why we are chaining then's
+fetch("https://jsonplaceholder.typicode.com/todos/")
+  .then((res) => res.json())
+  .then((data) => console.log(data));
+
+console.log("here");
+
+//Async/await -> async functions return promises
+async function getTodos() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos/");
+  const data = await res.json();
+  console.log(data);
+}
+
+getTodos();
