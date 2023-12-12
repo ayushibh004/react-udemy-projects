@@ -72,23 +72,41 @@ function Header() {
 }
 
 function Menu() {
+  const pizzas = pizzaData;
+  const numPizzas = pizzas.length;
+
   return (
     <main className="menu">
       <h2>Our menu</h2>
-      <Pizza
+
+      {/* React fragment allows us to group elements without changing anything. if */}
+      {numPizzas > 0 ? (
+        <>
+          <p>Authentic Italian cusine. 6 creative dishes. etc.</p>
+          <ul className="pizzas">
+            {pizzaData.map((pizza) => (
+              <Pizza pizzaObject={pizza} key={pizza.name} />
+            ))}
+          </ul>
+        </>
+      ) : (
+        <p>We are still working on our menu, Please come back later</p>
+      )}
+
+      {/* <Pizza
         name="Pizza Spinaci"
         ingredients="Tomato, mozarella, spinach, and ricotta cheese"
         photoName="pizzas/spinaci.jpg"
         price={10}
       />
 
-      {/* order of passing props doesn't matter */}
       <Pizza
         name="Pizza Funghi"
         ingredients="Tomato, mushrooms"
         price={12}
         photoName="pizzas/funghi.jpg"
-      />
+      />{" "}
+      */}
     </main>
   );
 }
@@ -98,18 +116,23 @@ function Menu() {
  * Declare all components at the top-level
  *
  */
-function Pizza(props) {
-  console.log(props); //made up of the object passed in when using the component
+function Pizza({ pizzaObject }) {
+  console.log(pizzaObject); //made up of the object passed in when using the component
+
+  //conditional rendering with multiple returns
+  // if (pizzaObject.soldOut) {
+  //   return null;
+  // }
 
   return (
-    <div className="pizza">
-      <img src={props.photoName} alt={props.name} />
+    <li className={`pizza ${pizzaObject.soldOut ? "sold-out" : ""}`}>
+      <img src={pizzaObject.photoName} alt={pizzaObject.name} />
       <div>
-        <h3>{props.name}</h3>
-        <p>{props.ingredients}</p>
-        <span>{props.price + 3}</span>
+        <h3>{pizzaObject.name}</h3>
+        <p>{pizzaObject.ingredients}</p>
+        <span>{pizzaObject.soldOut ? "SOLD OUT" : pizzaObject.price + 3}</span>
       </div>
-    </div>
+    </li>
   );
 }
 
@@ -127,10 +150,34 @@ function Footer() {
   //   alert("Sorry, we are closed");
   // }
 
+  // conditional rendering with multiple returns
+  // if (!isOpen) {
+  //   return <p>CLOSED</p>;
+  // }
+
   return (
     <footer className="footer">
-      {new Date().toLocaleTimeString()}. We're currently open!
+      {isOpen ? (
+        <Order closeHour={closeHour} openHour={openHour} />
+      ) : (
+        <p>
+          We're happy to welcome you between {openHour}:00 and {closeHour}:00.
+        </p>
+      )}
     </footer>
+  );
+}
+
+// destructuring props with the curly braces
+function Order({ closeHour, openHour }) {
+  return (
+    <div className="order">
+      <p>
+        We're open from {openHour}:00 until {closeHour}:00. Come visit us
+        online.
+      </p>
+      <button className="btn">Order</button>
+    </div>
   );
 }
 

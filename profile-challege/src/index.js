@@ -2,6 +2,39 @@ import { StrictMode, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./styles.css";
 
+const skills = [
+  {
+    skill: "HTML",
+    level: "advanced",
+    color: "#2662EA",
+  },
+  {
+    skill: "JavaScript",
+    level: "intermediate",
+    color: "#EFD81D",
+  },
+  {
+    skill: "TypeScript",
+    level: "intermediate",
+    color: "#C3DCAF",
+  },
+  {
+    skill: "Kotlin",
+    level: "intermediate",
+    color: "#E84F33",
+  },
+  {
+    skill: "React",
+    level: "intermediate",
+    color: "#60DAFB",
+  },
+  {
+    skill: "C",
+    level: "beginner",
+    color: "#FF3B00",
+  },
+];
+
 //image
 function Avatar() {
   const imgUrl = "/profilePic.jpg";
@@ -18,13 +51,26 @@ function Intro(props) {
   );
 }
 
-function SkillList(props) {
-  const color = props.color;
-
+function SkillsList({ skillList }) {
   return (
-    <span className="skill" style={{ backgroundColor: color }}>
-      {props.skill} {props.emoji}
-    </span>
+    <>
+      {skillList.map((s) => (
+        <Skill skill={s.skill} level={s.level} color={s.color} />
+      ))}
+    </>
+  );
+}
+
+function Skill({ skill, level, color }) {
+  return (
+    <div className="skill" style={{ backgroundColor: color }}>
+      <span>{skill}</span>
+      <span>
+        {level === "beginner" && "👶"}
+        {level === "intermediate" && "👍"}
+        {level === "advanced" && "💪"}
+      </span>
+    </div>
   );
 }
 
@@ -32,30 +78,10 @@ function App() {
   //inital values
   const initialDescription =
     "Technology analyst building knowledge in software development";
-  const initiallist = [
-    "React",
-    "TypeScript",
-    "JavaScript",
-    "HTML",
-    "CSS",
-    "Java",
-  ];
-  const initalColors = [
-    "lightblue",
-    "lightgreen",
-    "lightgray",
-    "lightsalmon",
-    "lavender",
-    "lightseagreen",
-  ];
-  const initalEmojiList = ["👍🏻", "👍🏽"];
 
   //state
   const [name] = useState("Ayushi Bhawnani");
   const [description] = useState(initialDescription);
-  const [skillsList] = useState(initiallist);
-  const [colorList] = useState(initalColors);
-  const [emojiList] = useState(initalEmojiList);
 
   return (
     <div className="card">
@@ -66,36 +92,7 @@ function App() {
         for each web dev skill that you have,
         customized with props */}
         <div className="skill-list">
-          <SkillList
-            skill={skillsList[0]}
-            color={colorList[0]}
-            emoji={emojiList[0]}
-          />
-          <SkillList
-            skill={skillsList[1]}
-            color={colorList[1]}
-            emoji={emojiList[0]}
-          />
-          <SkillList
-            skill={skillsList[2]}
-            color={colorList[2]}
-            emoji={emojiList[0]}
-          />
-          <SkillList
-            skill={skillsList[3]}
-            color={colorList[3]}
-            emoji={emojiList[1]}
-          />
-          <SkillList
-            skill={skillsList[4]}
-            color={colorList[4]}
-            emoji={emojiList[1]}
-          />
-          <SkillList
-            skill={skillsList[5]}
-            color={colorList[5]}
-            emoji={emojiList[1]}
-          />
+          <SkillsList skillList={skills} />
         </div>
       </div>
     </div>
