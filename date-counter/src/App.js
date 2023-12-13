@@ -36,16 +36,34 @@ function Counter() {
   return (
     <div>
       {/* STEP */}
-      <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "20px",
+          padding: "10px",
+        }}
+      >
         <button onClick={() => setStep(step - 1)}>-</button>
-        <p>Step: {step}</p>
+        <p>
+          <b>Step</b>: {step}
+        </p>
         <button onClick={() => setStep(step + 1)}>+</button>
       </div>
 
       {/* COUNT */}
-      <div style={{ display: "flex" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          gap: "20px",
+          padding: "10px",
+        }}
+      >
         <button onClick={subtractCount}>-</button>
-        <p>Count: {count}</p>
+        <p>
+          <b>Count:</b> {count}
+        </p>
         <button onClick={addCount}>+</button>
       </div>
 
