@@ -33,6 +33,13 @@ function Counter() {
     setDate(date);
   }
 
+  function onChangeCount(e) {
+    setCount(Number(e.target.value));
+    const now = new Date();
+    now.setDate(now.getDate() + Number(e.target.value));
+    setDate(now);
+  }
+
   return (
     <div>
       {/* STEP */}
@@ -44,11 +51,15 @@ function Counter() {
           padding: "10px",
         }}
       >
-        <button onClick={() => setStep(step - 1)}>-</button>
-        <p>
-          <b>Step</b>: {step}
-        </p>
-        <button onClick={() => setStep(step + 1)}>+</button>
+        {/* currently an uncontrolled element, make them controlled */}
+        <input
+          type="range"
+          min="0"
+          max="10"
+          value={step}
+          onChange={(e) => setStep(Number(e.target.value))}
+        />
+        <label>{step}</label>
       </div>
 
       {/* COUNT */}
@@ -61,17 +72,25 @@ function Counter() {
         }}
       >
         <button onClick={subtractCount}>-</button>
-        <p>
-          <b>Count:</b> {count}
-        </p>
+        <input
+          type="text"
+          required
+          minLength="0"
+          maxLength="4"
+          value={count}
+          onChange={(e) => onChangeCount(e)}
+        ></input>
         <button onClick={addCount}>+</button>
       </div>
 
       {/* TEXT */}
       <p>
-        {count > 0 && `${count} days from today is ${date}`}
-        {count < 0 && `${Math.abs(count)} days ago was ${date}`}
-        {count === 0 && `Today is ${date}`}
+        <b>
+          {count > 0 && `${count} days from today is ${date.toDateString()}`}
+          {count < 0 &&
+            `${Math.abs(count)} days ago was ${date.toDateString()}`}
+          {count === 0 && `Today is ${date.toDateString()}`}
+        </b>
       </p>
     </div>
   );
