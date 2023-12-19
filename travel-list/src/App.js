@@ -8,11 +8,17 @@ const initialItems = [
 ];
 
 export default function App() {
+  const [items, setItems] = useState(initialItems);
+
+  function handleAddItems(item) {
+    setItems([...items, item]);
+  }
+
   return (
     <div className="app">
       <Logo />
-      <Form />
-      <PackingList />
+      <Form onAddItems={handleAddItems} /> {/* convention to call props this */}
+      <PackingList items={items} />
       <Stats />
     </div>
   );
@@ -22,7 +28,7 @@ function Logo() {
   return <h1>🌴 Far Away 🥥</h1>;
 }
 
-function Form() {
+function Form({ onAddItems }) {
   //FIRST step for controlled elements
   const [description, setDescription] = useState("");
   const [quantity, setQuantity] = useState(1);
@@ -34,7 +40,7 @@ function Form() {
     if (!description) return;
 
     const newItem = { description, quantity, packed: false, id: Date.now() };
-    console.log(newItem);
+    onAddItems(newItem);
 
     //resetting the form
     setDescription("");
@@ -72,11 +78,11 @@ function Form() {
 
 // using ul to ensure that we are using semantic HTML
 // anything that maps over a list requires the key prop in order for react to efficiently update and track it
-function PackingList() {
+function PackingList({ items }) {
   return (
     <div className="list">
       <ul>
-        {initialItems.map((item) => (
+        {items.map((item) => (
           <Item item={item} key={item.id} />
         ))}
       </ul>
